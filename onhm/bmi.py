@@ -10,10 +10,10 @@ from typing import Tuple
 import numpy
 import requests
 import xarray as xr
+
 from bmipy import Bmi
 
 from .onhm import Onhm
-
 
 BmiVar = namedtuple(
     "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]

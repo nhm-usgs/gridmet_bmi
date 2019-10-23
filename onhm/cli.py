@@ -6,7 +6,6 @@ from . import __version__
 from .onhm import Onhm
 
 
-
 def yesterday():
     return datetime.date.isoformat(datetime.date.today() - datetime.timedelta(days=1))
 
@@ -35,18 +34,20 @@ def validate_date(date_string):
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--start", metavar="YYYY-MM-DD", default=yesterday, help="Start date", show_default="yesterday",
+    "--start",
+    metavar="YYYY-MM-DD",
+    default=yesterday,
+    help="Start date",
+    show_default="yesterday",
 )
 @click.option(
-    "--end", metavar="YYYY-MM-DD", default=yesterday, help="End date", show_default="yesterday",
+    "--end",
+    metavar="YYYY-MM-DD",
+    default=yesterday,
+    help="End date",
+    show_default="yesterday",
 )
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
-def main(
-    quiet,
-    verbose,
-    start,
-    end,
-    var,
-):
+def main(quiet, verbose, start, end, var):
     fetcher = Onhm(start, end_date=end)
     print(getattr(fetcher, var))

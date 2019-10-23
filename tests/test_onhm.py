@@ -1,4 +1,5 @@
 import pytest
+
 from onhm import Onhm
 
 
@@ -35,10 +36,7 @@ def test_cache_dir(tmpdir, cache_dir):
 def test_cached_data(tmpdir, shared_datadir):
     with tmpdir.as_cwd():
         onhm = Onhm(
-            "2010-05-22",
-            end_date="2010-05-22",
-            lazy=False,
-            cache_dir=shared_datadir,
+            "2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=shared_datadir
         )
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 0
 
