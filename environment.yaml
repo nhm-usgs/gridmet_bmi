@@ -2,8 +2,10 @@ name: onhm
 channels:
   - conda-forge
 dependencies:
+  - bmipy
+  - click
+  - netcdf4
   - numpy
-  - pytest
-  - pytest-datadir
+  - pyyaml
   - requests
   - xarray

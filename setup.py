@@ -26,5 +26,14 @@ setup(
     author_email="huttone@colorado.edu",
     url="http://csdms.colorado.edu",
     packages=find_packages(exclude=("tests*",)),
+    install_requires=[
+        "bmipy",
+        "click",
+        "netcdf4",
+        "numpy",
+        "pyyaml",
+        "requests",
+        "xarray",
+    ],
     entry_points={"console_scripts": ["onhm=onhm.cli:main"]},
 )
