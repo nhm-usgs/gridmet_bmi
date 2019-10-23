@@ -1,0 +1,9 @@
+name: bmi4data
+channels:
+  - conda-forge
+dependencies:
+  - numpy
+  - pytest
+  - pytest-datadir
+  - requests
+  - xarray
