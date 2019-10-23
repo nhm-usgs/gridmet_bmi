@@ -1,4 +1,4 @@
-name: bmi4data
+name: onhm
 channels:
   - conda-forge
 dependencies:
