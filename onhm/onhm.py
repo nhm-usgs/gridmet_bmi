@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
 import re
-import tempfile
 import urllib
-from collections import namedtuple
 from pathlib import Path
-from typing import Tuple
 
-import numpy
 import requests
 import xarray as xr
-
-from bmipy import Bmi
 
 
 class Onhm:

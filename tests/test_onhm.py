@@ -35,9 +35,7 @@ def test_cache_dir(tmpdir, cache_dir):
 
 def test_cached_data(tmpdir, shared_datadir):
     with tmpdir.as_cwd():
-        onhm = Onhm(
-            "2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=shared_datadir
-        )
+        Onhm("2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=shared_datadir)
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 0
 
 
@@ -51,5 +49,5 @@ def test_lazy_load(tmpdir):
 
 def test_eager_load(tmpdir):
     with tmpdir.as_cwd():
-        onhm = Onhm("2019-03-14", end_date="2019-03-14", lazy=False, cache_dir=".")
+        Onhm("2019-03-14", end_date="2019-03-14", lazy=False, cache_dir=".")
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 3
