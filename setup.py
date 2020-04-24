@@ -34,6 +34,7 @@ setup(
         "pyyaml",
         "requests",
         "xarray",
+        "pandas"
     ],
     entry_points={"console_scripts": ["onhm=onhm.cli:main"]},
 )

@@ -1,6 +1,7 @@
 import datetime
 
 import click
+import numpy as np
 
 from . import __version__
 from .onhm import Onhm
@@ -47,7 +48,26 @@ def validate_date(date_string):
     help="End date",
     show_default="yesterday",
 )
+@click.option(
+    "--map",
+    is_flag=True,
+    help='map gridmet to HRUs'
+)
+@click.option(
+    "--hru_ids",
+    default= np.empty(shape=(1), dtype=int),
+    help='HRU ids as 1-d numpy array of int',
+)
+@click.argument(
+    "--wght_file",
+    type=click.Path(exists=True),
+    metavar="path/to/file.csv",
+    help="weights file",
+)
+def touch(whg_file):
+    click.echo(click.format_filename(whg_file))
+
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
-def main(quiet, verbose, start, end, var):
-    fetcher = Onhm(start, end_date=end)
+def main(quiet, verbose, start, end, var, map, hru_ids, wght_file):
+    fetcher = Onhm(start, end_date=end, map=None, hru_ids=None, wght_file=None)
     print(getattr(fetcher, var))

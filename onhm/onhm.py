@@ -3,10 +3,13 @@ import datetime
 import re
 import urllib
 from pathlib import Path
+import pandas as pd
 
 import requests
 import xarray as xr
+import numpy as np
 
+from .helpers import np_get_wval, getaverage
 
 class Onhm:
 
@@ -18,10 +21,16 @@ class Onhm:
         "precipitation_amount": "thredds/ncss/agg_met_pr_1979_CurrentYear_CONUS.nc",
     }
 
-    def __init__(self, start_date=None, end_date=None, lazy=True, cache_dir=None):
+    def __init__(self, start_date=None, end_date=None, map=None, hru_id = None, wght_file=None, lazy=True, cache_dir=None):
         """Fetch oNHM data."""
         self._start_date = Onhm.datetime_or_yesterday(start_date)
         self._end_date = Onhm.datetime_or_yesterday(end_date)
+        self._hru_id = hru_id
+        self._wght_file = wght_file
+        self._wghts = None
+        self._wghts_id = None
+        self._return_map = map
+        self._numdays = None
 
         if self._start_date > self._end_date:
             raise ValueError(
@@ -35,6 +44,21 @@ class Onhm:
                     self.end_date, datetime.date.today()
                 )
             )
+        self._delta = (self._end_date - self._start_date)
+        self._m_tmin_data = None
+        self._m_tmax_data = None
+        self._m_prcp_data = None
+        if self._return_map:
+            if self._wght_file:
+                self._wghts = pd.read_csv(self._wght_file)
+                self._wghts_id = self._wghts.columns[1]
+                self._unique_hru_ids = self._wghts.groupby(self._wghts_id)
+                self._m_tmin_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
+                self._m_tmax_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
+                self._m_prcp_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
+            else:
+                self._return_map = False
+                print(f'mapping to hru ids requires weights file')
 
         if cache_dir is None:
             cache_dir = Path("~/.onhm")
@@ -128,16 +152,71 @@ class Onhm:
 
     @property
     def tmax(self):
-        return self._lazy_load("daily_maximum_temperature")
+        tname = "daily_maximum_temperature"
+        ds = self._lazy_load(tname)
+
+        if self._return_map:
+            flt_val = ds.values.flatten(order='K')
+            for i in np.arange(ds.coords['day'].size):
+                for j in np.arange(len(self._hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                    tw = weight_id_rows.w.values
+                    tgid = weight_id_rows.grid_ids.values
+                    if np.isnan(getaverage(flt_val[tgid], tw)):
+                        self._m_tmax_data[i, j] = getaverage(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+                    else:
+                        self._m_tmax_data[i, j] = np_get_wval(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+
+            return xr.DataArray(self._m_tmax_data, dims=['day', 'hru_id'],
+                                coords={'day': list(ds.day.coords['day'].values),
+                                        'hru_id': list(self._hru_id)}, )
+        else:
+            return ds
 
     @property
     def tmin(self):
-        return self._lazy_load("daily_minimum_temperature")
+        tname = "daily_minimum_temperature"
+        ds =  self._lazy_load(tname)
+
+        if self._return_map:
+            flt_val = ds.values.flatten(order='K')
+            for i in np.arange(ds.coords['day'].size):
+                for j in np.arange(len(self._hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                    tw = weight_id_rows.w.values
+                    tgid = weight_id_rows.grid_ids.values
+                    if np.isnan(getaverage(flt_val[tgid], tw)):
+                        self._m_tmin_data[i, j] = getaverage(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+                    else:
+                        self._m_tmin_data[i, j] = np_get_wval(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+
+            return xr.DataArray(self._m_tmin_data, dims=['day', 'hru_id'],
+                                coords={'day': list(ds.day.coords['day'].values),
+                                        'hru_id': list(self._hru_id)}, )
+        else:
+            return ds
 
     @property
     def precip(self):
-        return self._lazy_load("precipitation_amount")
+        tname = "precipitation_amount"
+        ds =  self._lazy_load(tname)
+        if self._return_map:
+            flt_val = ds.values.flatten(order='K')
+            for i in np.arange(ds.coords['day'].size):
+                for j in np.arange(len(self._hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                    tw = weight_id_rows.w.values
+                    tgid = weight_id_rows.grid_ids.values
+                    if np.isnan(getaverage(flt_val[tgid], tw)):
+                        self._m_prcp_data[i, j] = getaverage(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+                    else:
+                        self._m_prcp_data[i, j] = np_get_wval(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
 
+            return xr.DataArray(self._m_prcp_data, dims=['day', 'hru_id'],
+                                coords={'day': list(ds.day.coords['day'].values),
+                                        'hru_id': list(self._hru_id)}, )
+        else:
+            return ds
     @classmethod
     def fetch_var(cls, name, start_date, end_date=None, cache_dir="."):
         if name not in cls.PATH:
