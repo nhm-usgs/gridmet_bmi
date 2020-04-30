@@ -18,9 +18,9 @@ m.initialize(config_file, run_dir)
 m.get_value('nowtime')
 m.get_value('nhm_id')
 
-data = Onhm("2019-03-14", end_date="2019-03-24", map=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
+data = Onhm("1981-04-07", end_date="1981-04-21", map=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
 # data = Onhm("2019-03-14", end_date="2019-03-24")
 
-ds = data.tmin
+ds = data.precip.data[:,:]*0.0393701
 tmp = 0
 m.finalize()

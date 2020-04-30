@@ -208,9 +208,9 @@ class Onhm:
                     tw = weight_id_rows.w.values
                     tgid = weight_id_rows.grid_ids.values
                     if np.isnan(getaverage(flt_val[tgid], tw)):
-                        self._m_prcp_data[i, j] = getaverage(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+                        self._m_prcp_data[i, j] = getaverage(ds.values[i, :, :].flatten(order='K')[tgid], tw)
                     else:
-                        self._m_prcp_data[i, j] = np_get_wval(ds.values[i, :, :].flatten(order='K')[tgid], tw) - 273.15
+                        self._m_prcp_data[i, j] = np_get_wval(ds.values[i, :, :].flatten(order='K')[tgid], tw)
 
             return xr.DataArray(self._m_prcp_data, dims=['day', 'hru_id'],
                                 coords={'day': list(ds.day.coords['day'].values),
