@@ -19,9 +19,9 @@ jobs:
     os: osx
     env: CONDA_ENV=3.7
     script:
-    - pip install twine wheel
-    - python setup.py bdist_wheel
-    - twine upload -u mcflugen -p$PYPI_PASS dist/*onhm*
+#    - pip install twine wheel
+#    - python setup.py bdist_wheel
+#    - twine upload -u mcflugen -p$PYPI_PASS dist/*onhm*
 before_install:
 - |
   if [[ $TRAVIS_OS_NAME == "osx" ]]; then
@@ -46,5 +46,5 @@ install:
 - pip install -e .
 script:
 - pip install pytest pytest-cov pytest-datadir coveralls
-- pytest --cov=onhm --cov-report=xml:$(pwd)/coverage.xml -vvv
+- pytest --cov=gridmet_bmi --cov-report=xml:$(pwd)/coverage.xml -vvv
 after_success: coveralls
