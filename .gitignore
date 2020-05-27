@@ -104,7 +104,7 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
->>>>>>> cd1ba7fe53dbdf30bbacd44cdbc4e719de7f5431
+
 
 # SageMath parsed files
 *.sage.py

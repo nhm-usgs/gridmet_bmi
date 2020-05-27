@@ -52,6 +52,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
+
 	flake8 gridmet_bmi tests
 
 pretty: ## reformat files to make them look pretty
@@ -74,9 +75,11 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
+
 	rm -f docs/api/gridmet_bmi.rst
 	rm -f docs/api/modules.rst
 	# sphinx-apidoc -o docs/api --separate --no-toc gridmet_bmi
+
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
