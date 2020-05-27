@@ -18,7 +18,7 @@ m.initialize(config_file, run_dir)
 m.get_value('nowtime')
 m.get_value('nhm_id')
 
-data = Gridmet("1981-04-07", end_date="1981-04-21", map=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
+data = Gridmet("1981-04-07", end_date="1981-04-21", hrumap=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
 # data = Gridmet("2019-03-14", end_date="2019-03-24")
 
 ds = data.tmax.data[:,:]

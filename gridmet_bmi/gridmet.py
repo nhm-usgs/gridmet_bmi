@@ -11,8 +11,8 @@ import numpy as np
 
 from .helpers import np_get_wval, getaverage
 
-class Gridmet:
 
+class Gridmet:
     SCHEME = "http"
     NETLOC = "thredds.northwestknowledge.net:8080"
     PATH = {
@@ -21,7 +21,8 @@ class Gridmet:
         "precipitation_amount": "thredds/ncss/agg_met_pr_1979_CurrentYear_CONUS.nc",
     }
 
-    def __init__(self, start_date=None, end_date=None, map=None, hru_id = None, wght_file=None, lazy=True, cache_dir=None):
+    def __init__(self, start_date=None, end_date=None, hrumap=None, hru_id=None, wght_file=None, lazy=True,
+                 cache_dir=None):
         """Fetch Gridmet data."""
         self._start_date = Gridmet.datetime_or_yesterday(start_date)
         self._end_date = Gridmet.datetime_or_yesterday(end_date)
@@ -29,7 +30,7 @@ class Gridmet:
         self._wght_file = wght_file
         self._wghts = None
         self._wghts_id = None
-        self._return_map = map
+        self._return_map = hrumap
         self._numdays = None
 
         if self._start_date > self._end_date:
@@ -53,9 +54,9 @@ class Gridmet:
                 self._wghts = pd.read_csv(self._wght_file)
                 self._wghts_id = self._wghts.columns[1]
                 self._unique_hru_ids = self._wghts.groupby(self._wghts_id)
-                self._m_tmin_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
-                self._m_tmax_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
-                self._m_prcp_data = np.zeros(shape=(self._delta.days+1, len(self._hru_id)))
+                self._m_tmin_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
+                self._m_tmax_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
+                self._m_prcp_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
             else:
                 self._return_map = False
                 print(f'mapping to hru ids requires weights file')
@@ -176,7 +177,7 @@ class Gridmet:
     @property
     def tmin(self):
         tname = "daily_minimum_temperature"
-        ds =  self._lazy_load(tname)
+        ds = self._lazy_load(tname)
 
         if self._return_map:
             flt_val = ds.values.flatten(order='K')
@@ -199,7 +200,7 @@ class Gridmet:
     @property
     def precip(self):
         tname = "precipitation_amount"
-        ds =  self._lazy_load(tname)
+        ds = self._lazy_load(tname)
         if self._return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
@@ -217,6 +218,7 @@ class Gridmet:
                                         'hru_id': list(self._hru_id)}, )
         else:
             return ds
+
     @classmethod
     def fetch_var(cls, name, start_date, end_date=None, cache_dir="."):
         if name not in cls.PATH:

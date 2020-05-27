@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.ma import masked
 
+
 def getaverage(data, wghts):
     try:
         v_ave = np.average(data, weights=wghts)
