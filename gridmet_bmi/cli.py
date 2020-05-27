@@ -3,8 +3,8 @@ import datetime
 import click
 import numpy as np
 
-from . import __version__
-from .gridmet import Gridmet
+from gridmet_bmi import __version__
+from gridmet_bmi.gridmet import Gridmet
 
 
 def yesterday():
@@ -58,16 +58,17 @@ def validate_date(date_string):
     default= np.empty(shape=(1), dtype=int),
     help='HRU ids as 1-d numpy array of int',
 )
-@click.argument(
+@click.option(
     "--wght_file",
     type=click.Path(exists=True),
-    metavar="path/to/file.csv",
+    metavar="path_to_file.csv",
     help="weights file",
 )
-def touch(whg_file):
-    click.echo(click.format_filename(whg_file))
+# def touch(whgt_file):
+#     click.echo(click.format_filename(whgt_file))
 
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
 def main(quiet, verbose, start, end, var, map, hru_ids, wght_file):
+    print('test')
     fetcher = Gridmet(start, end_date=end, map=None, hru_ids=None, wght_file=None)
     print(getattr(fetcher, var))
