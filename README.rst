@@ -6,6 +6,6 @@ Gridmet_BMI
 Python and command-line interface to the Gridmet climate data services
 
 .. |Build Status| image:: https://travis-ci.org/github/nhm-usgs/gridmet_bmi?branch=master
-   :target: https://travis-ci.org/mcflugen/onhm
+   :target: https://travis-ci.org/github/nhm-usgs/gridmet_bmi
 .. |Code style: black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
