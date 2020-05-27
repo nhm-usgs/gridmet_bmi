@@ -27,8 +27,8 @@ def validate_date(date_string):
     '--quiet',
     is_flag=True,
     help=(
-            'Don\'t emit non-error messages to stderr. Errors are still emitted, '
-            'silence those with 2>/dev/null.'
+        'Don\'t emit non-error messages to stderr. Errors are still emitted, '
+        'silence those with 2>/dev/null.'
     ),
 )
 @click.option(

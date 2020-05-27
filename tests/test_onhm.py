@@ -14,6 +14,7 @@ def test_end_date_start_date():
     with pytest.raises(ValueError):
         Gridmet("2019-03-14", end_date="2019-03-13", lazy=True)
 
+
 def test_end_date_in_the_future():
     with pytest.raises(ValueError):
         Gridmet("2019-03-14", end_date="2100-03-14", lazy=True)
@@ -50,4 +51,3 @@ def test_eager_load(tmpdir):
     with tmpdir.as_cwd():
         Gridmet("2019-03-14", end_date="2019-03-14", lazy=False, cache_dir=".")
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 3
-

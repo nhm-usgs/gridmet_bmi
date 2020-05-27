@@ -9,6 +9,7 @@ def getaverage(data, wghts):
         v_ave = np.nan
     return v_ave
 
+
 def np_get_wval(ndata, wghts, hru_id=None):
     mdata = np.ma.masked_array(ndata, np.isnan(ndata))
     tmp = np.ma.average(mdata, weights=wghts)

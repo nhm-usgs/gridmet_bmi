@@ -59,7 +59,7 @@ class Gridmet:
                 self._m_prcp_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
             else:
                 self._return_map = False
-                print(f'mapping to hru ids requires weights file')
+                print('mapping to hru ids requires weights file')
 
         if cache_dir is None:
             cache_dir = Path("~/.gridmet")
