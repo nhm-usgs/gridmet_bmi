@@ -18,7 +18,7 @@ def read_requirements():
 
 
 setup(
-    name="onhm",
+    name="gridmet_bmi",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="Fetch data from the operational National Hydrologic Model",
@@ -34,6 +34,7 @@ setup(
         "pyyaml",
         "requests",
         "xarray",
+        "pandas"
     ],
-    entry_points={"console_scripts": ["onhm=onhm.cli:main"]},
+    entry_points={"console_scripts": ["gridmet_bmi=gridmet_bmi.cli:main"]},
 )

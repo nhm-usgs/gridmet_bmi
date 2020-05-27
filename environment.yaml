@@ -1,4 +1,5 @@
-name: onhm
+
+name: gridmet_bmi
 channels:
   - conda-forge
 dependencies:
@@ -9,3 +10,4 @@ dependencies:
   - pyyaml
   - requests
   - xarray
+  - pandas
