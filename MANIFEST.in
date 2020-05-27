@@ -1,2 +1,2 @@
 include versioneer.py
-include onhm/_version.py
+include gridmet_bmi/_version.py

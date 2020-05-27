@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from onhm import Onhm
+from gridmet_bmi import Gridmet
 import numpy as np
 from pymt.models import PRMSSurface
 from pathlib import Path
@@ -18,8 +18,8 @@ m.initialize(config_file, run_dir)
 m.get_value('nowtime')
 m.get_value('nhm_id')
 
-data = Onhm("1981-04-07", end_date="1981-04-21", map=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
-# data = Onhm("2019-03-14", end_date="2019-03-24")
+data = Gridmet("1981-04-07", end_date="1981-04-21", map=True, hru_id=m.get_value('nhm_id'), wght_file=wght)
+# data = Gridmet("2019-03-14", end_date="2019-03-24")
 
 ds = data.precip.data[:,:]*0.0393701
 tmp = 0

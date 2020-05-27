@@ -41,8 +41,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = ""
-    cfg.parentdir_prefix = "onhm-"
-    cfg.versionfile_source = "onhm/_version.py"
+    cfg.parentdir_prefix = "gridmet_bmi-"
+    cfg.versionfile_source = "gridmet_bmi/_version.py"
     cfg.verbose = False
     return cfg
 

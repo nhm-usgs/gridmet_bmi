@@ -4,7 +4,7 @@ import click
 import numpy as np
 
 from . import __version__
-from .onhm import Onhm
+from .gridmet import Gridmet
 
 
 def yesterday():
@@ -69,5 +69,5 @@ def touch(whg_file):
 
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
 def main(quiet, verbose, start, end, var, map, hru_ids, wght_file):
-    fetcher = Onhm(start, end_date=end, map=None, hru_ids=None, wght_file=None)
+    fetcher = Gridmet(start, end_date=end, map=None, hru_ids=None, wght_file=None)
     print(getattr(fetcher, var))

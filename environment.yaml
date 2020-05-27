@@ -1,4 +1,4 @@
-name: onhm
+name: gridmet_bmi
 channels:
   - conda-forge
 dependencies:

@@ -11,7 +11,7 @@ import numpy as np
 
 from .helpers import np_get_wval, getaverage
 
-class Onhm:
+class Gridmet:
 
     SCHEME = "http"
     NETLOC = "thredds.northwestknowledge.net:8080"
@@ -22,9 +22,9 @@ class Onhm:
     }
 
     def __init__(self, start_date=None, end_date=None, map=None, hru_id = None, wght_file=None, lazy=True, cache_dir=None):
-        """Fetch oNHM data."""
-        self._start_date = Onhm.datetime_or_yesterday(start_date)
-        self._end_date = Onhm.datetime_or_yesterday(end_date)
+        """Fetch Gridmet data."""
+        self._start_date = Gridmet.datetime_or_yesterday(start_date)
+        self._end_date = Gridmet.datetime_or_yesterday(end_date)
         self._hru_id = hru_id
         self._wght_file = wght_file
         self._wghts = None
@@ -61,7 +61,7 @@ class Onhm:
                 print(f'mapping to hru ids requires weights file')
 
         if cache_dir is None:
-            cache_dir = Path("~/.onhm")
+            cache_dir = Path("~/.gridmet")
         self._cache_dir = Path(cache_dir).expanduser().resolve()
 
         self._dataset = None
@@ -71,13 +71,13 @@ class Onhm:
 
     @staticmethod
     def clear_cache(cache_dir=None):
-        for fname in Onhm.list_cache(cache_dir=cache_dir):
+        for fname in Gridmet.list_cache(cache_dir=cache_dir):
             fname.unlink()
 
     @staticmethod
     def list_cache(cache_dir=None):
         if cache_dir is None:
-            cache_dir = Path("~/.onhm")
+            cache_dir = Path("~/.gridmet")
         cache_dir = Path(cache_dir).expanduser().resolve()
 
         pattern = r"(?P<var>[a-z_]*)_(?P<start>[0-9\-]*)_(?P<end>[0-9\-]*)\.nc"
@@ -85,7 +85,7 @@ class Onhm:
         cached_files = []
         for fname in [p.name for p in cache_dir.glob("*.nc")]:
             match = re.match(pattern, fname)
-            if match and match.group("var") in Onhm.PATH:
+            if match and match.group("var") in Gridmet.PATH:
                 try:
                     datetime.date.fromisoformat(match.group("start"))
                     datetime.date.fromisoformat(match.group("end"))
@@ -134,7 +134,7 @@ class Onhm:
     def _fetch_and_open(self, name):
         self._cache_dir.mkdir(exist_ok=True)
         return xr.open_dataset(
-            Onhm.fetch_var(
+            Gridmet.fetch_var(
                 name, self.start_date, self.end_date, cache_dir=self._cache_dir
             )
         )

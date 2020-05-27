@@ -7,7 +7,7 @@ import yaml
 
 from bmipy import Bmi
 
-from .onhm import Onhm
+from .gridmet import Gridmet
 
 BmiVar = namedtuple(
     "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]
@@ -27,7 +27,7 @@ def sensible_bmi(obj):
     return SensibleBmi
 
 
-class BmiOnhm(Bmi):
+class BmiGridmet(Bmi):
     def finalize(self) -> None:
         """Perform tear-down tasks for the model.
 
@@ -45,7 +45,7 @@ class BmiOnhm(Bmi):
         str
             The name of the component.
         """
-        return "USGS operational National Hydrologic Model (oNHM)"
+        return "Gridmet climate data"
 
     def get_current_time(self) -> float:
         """Current time of the model.
@@ -609,7 +609,7 @@ class BmiOnhm(Bmi):
         else:
             conf = {}
         conf.setdefault("start_date", "2019-07-15")
-        self._data = Onhm(lazy=False, **conf).dataset
+        self._data = Gridmet(lazy=False, **conf).dataset
 
         self._output_var_names = tuple(self._data.data_vars)
         self._input_var_names = ()
