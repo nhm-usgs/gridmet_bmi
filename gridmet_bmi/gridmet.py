@@ -8,6 +8,7 @@ import pandas as pd
 import requests
 import xarray as xr
 import numpy as np
+import yaml
 
 from .helpers import np_get_wval, getaverage
 
@@ -22,16 +23,23 @@ class Gridmet:
     }
 
     def __init__(self, start_date=None, end_date=None, hrumap=None, hru_id=None, wght_file=None, lazy=True,
-                 cache_dir=None):
-        """Fetch Gridmet data."""
-        self._start_date = Gridmet.datetime_or_yesterday(start_date)
-        self._end_date = Gridmet.datetime_or_yesterday(end_date)
-        self._hru_id = hru_id
-        self._wght_file = wght_file
+                 cache_dir=None, config_file=None):
         self._wghts = None
         self._wghts_id = None
-        self._return_map = hrumap
-        self._numdays = None
+        lazy = True
+        cache_dir = None
+        if config_file is not None:
+            with open(config_file, 'r') as fp:
+                parameters = yaml.safe_load(fp)
+            for key, value in parameters.items():
+                setattr(self, key, value)
+        else:
+            self._start_date = Gridmet.datetime_or_yesterday(start_date)
+            self._end_date = Gridmet.datetime_or_yesterday(end_date)
+            self.hru_id = hru_id
+            self.wght_file = wght_file
+            self.return_map = hrumap
+
 
         if self._start_date > self._end_date:
             raise ValueError(
@@ -49,16 +57,16 @@ class Gridmet:
         self._m_tmin_data = None
         self._m_tmax_data = None
         self._m_prcp_data = None
-        if self._return_map:
-            if self._wght_file:
-                self._wghts = pd.read_csv(self._wght_file)
+        if self.return_map:
+            if self.wght_file:
+                self._wghts = pd.read_csv(self.wght_file)
                 self._wghts_id = self._wghts.columns[1]
                 self._unique_hru_ids = self._wghts.groupby(self._wghts_id)
-                self._m_tmin_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
-                self._m_tmax_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
-                self._m_prcp_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
+                self._m_tmin_data = np.zeros(shape=(self._delta.days + 1, len(self.hru_id)))
+                self._m_tmax_data = np.zeros(shape=(self._delta.days + 1, len(self.hru_id)))
+                self._m_prcp_data = np.zeros(shape=(self._delta.days + 1, len(self.hru_id)))
             else:
-                self._return_map = False
+                self.return_map = False
                 print('mapping to hru ids requires weights file')
 
         if cache_dir is None:
@@ -136,7 +144,7 @@ class Gridmet:
         self._cache_dir.mkdir(exist_ok=True)
         return xr.open_dataset(
             Gridmet.fetch_var(
-                name, self.start_date, self.end_date, cache_dir=self._cache_dir
+                name, self._start_date, self.end_date, cache_dir=self._cache_dir
             )
         )
 
@@ -156,11 +164,11 @@ class Gridmet:
         tname = "daily_maximum_temperature"
         ds = self._lazy_load(tname)
 
-        if self._return_map:
+        if self.return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
-                for j in np.arange(len(self._hru_id)):
-                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                for j in np.arange(len(self.hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self.hru_id[j])
                     tw = weight_id_rows.w.values
                     tgid = weight_id_rows.grid_ids.values
                     if np.isnan(getaverage(flt_val[tgid], tw)):
@@ -170,7 +178,7 @@ class Gridmet:
 
             return xr.DataArray(self._m_tmax_data, dims=['day', 'hru_id'],
                                 coords={'day': list(ds.day.coords['day'].values),
-                                        'hru_id': list(self._hru_id)}, )
+                                        'hru_id': list(self.hru_id)}, )
         else:
             return ds
 
@@ -179,11 +187,11 @@ class Gridmet:
         tname = "daily_minimum_temperature"
         ds = self._lazy_load(tname)
 
-        if self._return_map:
+        if self.return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
-                for j in np.arange(len(self._hru_id)):
-                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                for j in np.arange(len(self.hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self.hru_id[j])
                     tw = weight_id_rows.w.values
                     tgid = weight_id_rows.grid_ids.values
                     if np.isnan(getaverage(flt_val[tgid], tw)):
@@ -193,7 +201,7 @@ class Gridmet:
 
             return xr.DataArray(self._m_tmin_data, dims=['day', 'hru_id'],
                                 coords={'day': list(ds.day.coords['day'].values),
-                                        'hru_id': list(self._hru_id)}, )
+                                        'hru_id': list(self.hru_id)}, )
         else:
             return ds
 
@@ -201,11 +209,11 @@ class Gridmet:
     def precip(self):
         tname = "precipitation_amount"
         ds = self._lazy_load(tname)
-        if self._return_map:
+        if self.return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
-                for j in np.arange(len(self._hru_id)):
-                    weight_id_rows = self._unique_hru_ids.get_group(self._hru_id[j])
+                for j in np.arange(len(self.hru_id)):
+                    weight_id_rows = self._unique_hru_ids.get_group(self.hru_id[j])
                     tw = weight_id_rows.w.values
                     tgid = weight_id_rows.grid_ids.values
                     if np.isnan(getaverage(flt_val[tgid], tw)):
@@ -215,7 +223,7 @@ class Gridmet:
 
             return xr.DataArray(self._m_prcp_data, dims=['day', 'hru_id'],
                                 coords={'day': list(ds.day.coords['day'].values),
-                                        'hru_id': list(self._hru_id)}, )
+                                        'hru_id': list(self.hru_id)}, )
         else:
             return ds
 
