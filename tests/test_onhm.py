@@ -32,10 +32,11 @@ def test_bad_date_format():
 @pytest.mark.parametrize("cache_dir", (".", "./cache"))
 def test_cache_dir(tmpdir, cache_dir):
     with tmpdir.as_cwd():
+        print(cache_dir)
         gridmet = Gridmet(start_date="2019-03-14", end_date="2019-03-14", lazy=True, cache_dir=cache_dir)
+        print(gridmet.cache_dir)
         assert gridmet.cache_dir.is_absolute()
         assert list(gridmet.cache_dir.glob("*.nc")) == []
-
 
 def test_cached_data(tmpdir, shared_datadir):
     with tmpdir.as_cwd():

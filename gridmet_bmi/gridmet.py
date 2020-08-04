@@ -34,7 +34,7 @@ class Gridmet:
         self._return_map = return_map
         self._wght_file = wght_file
 
-        cache_dir = None
+        # cache_dir = None
         if config_file is not None:
             with open(config_file, 'r') as fp:
                 parameters = yaml.safe_load(fp)
