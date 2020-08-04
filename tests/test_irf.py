@@ -16,13 +16,13 @@ def test_component_name():
 
 def test_start_time():
     model = BmiGridmet()
-    model.initialize("gridmet_bmi_test.yaml")
+    model.initialize("./gridmet_bmi_test.yaml")
 
     assert_almost_equal(model.get_start_time(), 0.0)
 
 def test_end_time():
     model = BmiGridmet()
-    model.initialize("gridmet_bmi_test.yaml")
+    model.initialize("./gridmet_bmi_test.yaml")
 
     assert_almost_equal(model.get_end_time(), 7.0)
 

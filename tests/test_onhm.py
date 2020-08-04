@@ -3,9 +3,9 @@ import pytest
 from gridmet_bmi import Gridmet
 
 
-@pytest.mark.parametrize("var", ("daily_maximum_temperature",
-                                 "daily_minimum_temperature",
-                                 "precipitation_amount"))
+@pytest.mark.parametrize("var", ("tmax",
+                                 "tmin",
+                                 "prcp"))
 def test_get_var(tmpdir, var):
     with tmpdir.as_cwd():
         gridmet = Gridmet(start_date="2019-03-14", end_date="2019-03-14", lazy=True)

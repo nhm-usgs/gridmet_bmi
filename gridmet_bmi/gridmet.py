@@ -74,7 +74,7 @@ class Gridmet:
                 self._m_tmax_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
                 self._m_prcp_data = np.zeros(shape=(self._delta.days + 1, len(self._hru_id)))
             else:
-                self.return_map = False
+                self._return_map = False
                 print('mapping to hru ids requires weights file')
 
         if cache_dir is None:
@@ -176,7 +176,7 @@ class Gridmet:
         tname = "daily_maximum_temperature"
         ds = self._lazy_load(tname)
 
-        if self.return_map:
+        if self._return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
                 for j in np.arange(len(self._hru_id)):
@@ -199,7 +199,7 @@ class Gridmet:
         tname = "daily_minimum_temperature"
         ds = self._lazy_load(tname)
 
-        if self.return_map:
+        if self._return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
                 for j in np.arange(len(self._hru_id)):
@@ -221,7 +221,7 @@ class Gridmet:
     def precip(self):
         tname = "precipitation_amount"
         ds = self._lazy_load(tname)
-        if self.return_map:
+        if self._return_map:
             flt_val = ds.values.flatten(order='K')
             for i in np.arange(ds.coords['day'].size):
                 for j in np.arange(len(self._hru_id)):
