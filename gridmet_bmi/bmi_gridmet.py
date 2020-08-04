@@ -2,7 +2,6 @@
 """Basic Model Interface (BMI) for the Diffusion model."""
 import numpy
 from typing import Tuple
-import yaml
 
 from bmipy import Bmi
 from .gridmet import Gridmet
@@ -14,6 +13,7 @@ BmiVar = namedtuple(
 BmiGridUniformRectilinear = namedtuple(
     "BmiGridUniformRectilinear", ["shape", "yx_spacing", "yx_of_lower_left"]
 )
+
 
 class BmiGridmet(Bmi):
     _name = 'Gridmet_BMI'
@@ -673,7 +673,6 @@ class BmiGridmet(Bmi):
                 location="node",
                 grid=0,
             )
-        tmp=0
 
     def set_value(self, name: str, values: numpy.ndarray) -> None:
         """Specify a new value for a model variable.
@@ -729,4 +728,3 @@ class BmiGridmet(Bmi):
             A model time later than the current model time.
         """
         raise NotImplementedError("update_until")
-

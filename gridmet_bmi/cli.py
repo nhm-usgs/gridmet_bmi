@@ -80,5 +80,6 @@ def main(quiet, verbose, config_file, start, end, var, hrumap, hru_ids, wght_fil
     fetcher = Gridmet(config_file=config_file)
     print(getattr(fetcher, var))
 
+
 if __name__ == "__main__":
     sys.exit(main())

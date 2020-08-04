@@ -10,7 +10,6 @@ import xarray as xr
 import numpy as np
 import yaml
 
-
 from .helpers import np_get_wval, getaverage
 
 
@@ -23,9 +22,9 @@ class Gridmet:
         "precipitation_amount": "thredds/ncss/agg_met_pr_1979_CurrentYear_CONUS.nc",
     }
 
-
-    def __init__(self, start_date='2019-03-14', end_date='2019-03-14', hru_id=None, return_map = None, wght_file=None, config_file=None,
-                 lazy=True, cache_dir=None, ):
+    def __init__(self, start_date='2019-03-14', end_date='2019-03-14',
+                 hru_id=None, return_map=None, wght_file=None, config_file=None,
+                 lazy=True, cache_dir=None):
         self._wghts = None
         self._wghts_id = None
         self._start_date = start_date

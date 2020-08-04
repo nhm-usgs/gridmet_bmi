@@ -38,6 +38,7 @@ def test_cache_dir(tmpdir, cache_dir):
         assert gridmet.cache_dir.is_absolute()
         assert list(gridmet.cache_dir.glob("*.nc")) == []
 
+
 def test_cached_data(tmpdir, shared_datadir):
     with tmpdir.as_cwd():
         Gridmet(start_date="2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=shared_datadir)
