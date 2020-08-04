@@ -17,7 +17,7 @@ BmiGridUniformRectilinear = namedtuple(
 
 class BmiGridmet(Bmi):
     _name = 'Gridmet_BMI'
-    _input_var_names = ('start_date', 'end_date')
+    _input_var_names = ('')
     _output_var_names = ('daily_maximum_temperature', 'daily_minimum_temperature', 'precipitation_amount')
 
     def __init__(self):
@@ -453,7 +453,7 @@ class BmiGridmet(Bmi):
         ndarray
             The same numpy array that was passed as an input buffer.
         """
-        raise NotImplementedError("get_value")
+        dest[:] = self._data[name][self._day].reshape(-1)
 
     def get_value_at_indices(
             self, name: str, dest: numpy.ndarray, inds: numpy.ndarray
@@ -474,7 +474,7 @@ class BmiGridmet(Bmi):
         array_like
             Value of the model variable at the given location.
         """
-        raise NotImplementedError("get_value_at_indices")
+        dest[:] = self._data[name][self._day].reshape(-1)[inds]
 
     def get_value_ptr(self, name: str) -> numpy.ndarray:
         """Get a reference to values of the given variable.
@@ -493,7 +493,7 @@ class BmiGridmet(Bmi):
         array_like
             A reference to a model variable.
         """
-        raise NotImplementedError("get_value_ptr")
+        return self._data[name][self._day].values
 
     def get_var_grid(self, name: str) -> int:
         """Get grid identifier for the given variable.
@@ -523,7 +523,7 @@ class BmiGridmet(Bmi):
         int
             Item size in bytes.
         """
-        raise NotImplementedError("get_var_itemsize")
+        return self._var[name].itemsize
 
     def get_var_location(self, name: str) -> str:
         """Get the grid element type that the a given variable is defined on.
@@ -574,7 +574,7 @@ class BmiGridmet(Bmi):
         int
             The size of the variable, counted in bytes.
         """
-        raise NotImplementedError("get_var_nbytes")
+        return self._var[name].nbytes
 
     def get_var_type(self, name: str) -> str:
         """Get data type of the given variable.
@@ -589,7 +589,7 @@ class BmiGridmet(Bmi):
         str
             The Python variable type; e.g., ``str``, ``int``, ``float``.
         """
-        raise NotImplementedError("get_var_type")
+        return self._var[name].dtype
 
     def get_var_units(self, name: str) -> str:
         """Get units of the given variable.
@@ -618,7 +618,7 @@ class BmiGridmet(Bmi):
 
         .. _UDUNITS: http://www.unidata.ucar.edu/software/udunits
         """
-        raise NotImplementedError("get_var_units")
+        return self._var[name].units
 
     def initialize(self, config_file: str) -> None:
         """Perform startup tasks for the model.
@@ -714,6 +714,7 @@ class BmiGridmet(Bmi):
         method can return with no action.
         """
         self._model.update()
+        self._day = self.get_current_time()
 
     def update_until(self, time: float) -> None:
         """Advance model state until the given time.
