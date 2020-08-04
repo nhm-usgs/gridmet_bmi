@@ -1,5 +1,5 @@
-start: 2020-01-01
-end: 2020-01-07
-return_map: False
-hru_id: None
-wght_file: None
+_start_date: 2020-01-01
+_end_date: 2020-01-07
+_return_map: False
+_hru_id: None
+_wght_file: None

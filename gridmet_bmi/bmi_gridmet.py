@@ -2,15 +2,23 @@
 """Basic Model Interface (BMI) for the Diffusion model."""
 import numpy
 from typing import Tuple
+import yaml
 
 from bmipy import Bmi
 from .gridmet import Gridmet
+from collections import namedtuple
 
+BmiVar = namedtuple(
+    "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]
+)
+BmiGridUniformRectilinear = namedtuple(
+    "BmiGridUniformRectilinear", ["shape", "yx_spacing", "yx_of_lower_left"]
+)
 
 class BmiGridmet(Bmi):
     _name = 'Gridmet_BMI'
-    _input_var_names = ('plate_surface__temperature',)
-    _output_var_names = ('plate_surface__temperature',)
+    _input_var_names = ('start_date', 'end_date')
+    _output_var_names = ('daily_maximum_temperature', 'daily_minimum_temperature', 'precipitation_amount')
 
     def __init__(self):
         self._model = None
@@ -26,7 +34,7 @@ class BmiGridmet(Bmi):
         loop. This typically includes deallocating memory, closing files and
         printing reports.
         """
-        self._model = None
+        self._day = 0
 
     def get_component_name(self) -> str:
         """Name of the component.
@@ -46,7 +54,7 @@ class BmiGridmet(Bmi):
         float
             The current model time.
         """
-        raise NotImplementedError("get_current_time")
+        return self._model.time
 
     def get_end_time(self) -> float:
         """End time of the model.
@@ -56,7 +64,7 @@ class BmiGridmet(Bmi):
         float
             The maximum model time.
         """
-        raise NotImplementedError("get_end_time")
+        return self._model.end
 
     def get_grid_edge_count(self, grid: int) -> int:
         """Get the number of edges in the grid.
@@ -200,7 +208,7 @@ class BmiGridmet(Bmi):
             The input numpy array that holds the coordinates of the grid's
             lower-left corner.
         """
-        raise NotImplementedError("get_grid_origin")
+        return self._grid[grid].yx_of_lower_left
 
     def get_grid_rank(self, grid: int) -> int:
         """Get number of dimensions of the computational grid.
@@ -215,7 +223,7 @@ class BmiGridmet(Bmi):
         int
             Rank of the grid.
         """
-        raise NotImplementedError("get_grid_rank")
+        return 2
 
     def get_grid_shape(self, grid: int, shape: numpy.ndarray) -> numpy.ndarray:
         """Get dimensions of the computational grid.
@@ -232,7 +240,8 @@ class BmiGridmet(Bmi):
         ndarray of int
             The input numpy array that holds the grid's shape.
         """
-        raise NotImplementedError("get_grid_shape")
+        shape[:] = self._grid[grid].shape
+        return shape
 
     def get_grid_size(self, grid: int) -> int:
         """Get the total number of elements in the computational grid.
@@ -247,7 +256,7 @@ class BmiGridmet(Bmi):
         int
             Size of the grid.
         """
-        raise NotImplementedError("get_grid_size")
+        return numpy.prod(self._grid[grid].shape)
 
     def get_grid_spacing(self, grid: int, spacing: numpy.ndarray) -> numpy.ndarray:
         """Get distance between nodes of the computational grid.
@@ -264,7 +273,7 @@ class BmiGridmet(Bmi):
         ndarray of float
             The input numpy array that holds the grid's spacing.
         """
-        raise NotImplementedError("get_grid_spacing")
+        return self._grid[grid].yx_spacing
 
     def get_grid_type(self, grid: int) -> str:
         """Get the grid type as a string.
@@ -279,7 +288,7 @@ class BmiGridmet(Bmi):
         str
             Type of grid as a string.
         """
-        raise NotImplementedError("get_grid_type")
+        return "uniform_rectilinear"
 
     def get_grid_x(self, grid: int, x: numpy.ndarray) -> numpy.ndarray:
         """Get coordinates of grid nodes in the x direction.
@@ -340,7 +349,7 @@ class BmiGridmet(Bmi):
         int
           The number of input variables.
         """
-        raise NotImplementedError("get_input_item_count")
+        return len(self._input_var_names)
 
     def get_input_var_names(self) -> Tuple[str]:
         """List of a model's input variables.
@@ -362,7 +371,7 @@ class BmiGridmet(Bmi):
 
         Standard Names do not have to be used within the model.
         """
-        raise NotImplementedError("get_input_var_names")
+        return self._input_var_names
 
     def get_output_item_count(self) -> int:
         """Count of a model's output variables.
@@ -372,7 +381,7 @@ class BmiGridmet(Bmi):
         int
           The number of output variables.
         """
-        raise NotImplementedError("get_output_item_count")
+        return len(self._output_var_names)
 
     def get_output_var_names(self) -> Tuple[str]:
         """List of a model's output variables.
@@ -385,7 +394,7 @@ class BmiGridmet(Bmi):
         list of str
             The output variables for the model.
         """
-        raise NotImplementedError("get_output_var_names")
+        return self._output_var_names
 
     def get_start_time(self) -> float:
         """Start time of the model.
@@ -397,7 +406,7 @@ class BmiGridmet(Bmi):
         float
             The model start time.
         """
-        raise NotImplementedError("get_start_time")
+        return 0.0
 
     def get_time_step(self) -> float:
         """Current time step of the model.
@@ -409,7 +418,7 @@ class BmiGridmet(Bmi):
         float
             The time step used in model.
         """
-        raise NotImplementedError("get_time_step")
+        return self._model.dt
 
     def get_time_units(self) -> str:
         """Time units of the model.
@@ -423,7 +432,7 @@ class BmiGridmet(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        raise NotImplementedError("get_time_units")
+        return f'days since {self._model.start_date}'
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
@@ -499,7 +508,7 @@ class BmiGridmet(Bmi):
         int
           The grid identifier.
         """
-        raise NotImplementedError("get_var_grid")
+        return self._var[name].grid
 
     def get_var_itemsize(self, name: str) -> int:
         """Get memory use for each array element in bytes.
@@ -632,7 +641,35 @@ class BmiGridmet(Bmi):
         recommended. A template of a model's configuration file
         with placeholder values is used by the BMI.
         """
-        self._model = Gridmet(config_file=config_file)
+        self._model = Gridmet(config_file=config_file, lazy=False)
+        self._data = self._model.dataset
+        self._day = 0
+        self._grid = {
+            0: BmiGridUniformRectilinear(
+                shape=(self._data.dims["lat"], self._data.dims["lon"]),
+                yx_spacing=(
+                    float(self._data.attrs["geospatial_lat_resolution"]),
+                    float(self._data.attrs["geospatial_lon_resolution"]),
+                ),
+                yx_of_lower_left=(
+                    float(self._data.attrs["geospatial_lat_min"]),
+                    float(self._data.attrs["geospatial_lat_max"]),
+                ),
+            )
+        }
+
+        self._var = {}
+        for name in self._output_var_names:
+            array = self._data[name].values
+            self._var[name] = BmiVar(
+                dtype=str(array.dtype),
+                itemsize=array.itemsize,
+                nbytes=array.nbytes,
+                units=self._data[name].attrs["units"],
+                location="node",
+                grid=0,
+            )
+        tmp=0
 
     def set_value(self, name: str, values: numpy.ndarray) -> None:
         """Specify a new value for a model variable.
@@ -676,7 +713,7 @@ class BmiGridmet(Bmi):
         then they can be computed by the :func:`initialize` method and this
         method can return with no action.
         """
-        raise NotImplementedError("update")
+        self._model.update()
 
     def update_until(self, time: float) -> None:
         """Advance model state until the given time.

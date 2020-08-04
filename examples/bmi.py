@@ -7,7 +7,7 @@ import yaml
 
 from bmipy import Bmi
 
-from .gridmet import Gridmet
+from gridmet_bmi.gridmet import Gridmet
 
 BmiVar = namedtuple(
     "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]
