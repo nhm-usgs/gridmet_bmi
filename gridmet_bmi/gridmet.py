@@ -218,7 +218,7 @@ class Gridmet:
             return ds
 
     @property
-    def precip(self):
+    def prcp(self):
         tname = "precipitation_amount"
         ds = self._lazy_load(tname)
         if self._return_map:
