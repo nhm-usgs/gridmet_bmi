@@ -24,7 +24,7 @@ class Gridmet:
     }
 
 
-    def __init__(self, start_date=None, end_date=None, hru_id=None, return_map = None, wght_file=None, config_file=None,
+    def __init__(self, start_date='2019-03-14', end_date='2019-03-14', hru_id=None, return_map = None, wght_file=None, config_file=None,
                  lazy=True, cache_dir=None, ):
         self._wghts = None
         self._wghts_id = None

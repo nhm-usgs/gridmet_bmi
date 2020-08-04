@@ -10,7 +10,8 @@ def print_times(x):
     print(x.get_end_time())
 
 x = BmiGridmet()
-x.initialize('gridmet_bmi.yaml')
+# x.initialize('gridmet_bmi.yaml')
+x.initialize()
 print(x.get_input_var_names())
 print(x.get_output_var_names())
 print_times(x)

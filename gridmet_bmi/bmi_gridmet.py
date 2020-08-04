@@ -620,7 +620,7 @@ class BmiGridmet(Bmi):
         """
         return self._var[name].units
 
-    def initialize(self, config_file: str) -> None:
+    def initialize(self, config_file=None):
         """Perform startup tasks for the model.
 
         Perform all tasks that take place before entering the model's time
@@ -641,7 +641,11 @@ class BmiGridmet(Bmi):
         recommended. A template of a model's configuration file
         with placeholder values is used by the BMI.
         """
-        self._model = Gridmet(config_file=config_file, lazy=False)
+        if config_file is None:
+            self._model = Gridmet(lazy=False)
+        else:
+            self._model = Gridmet(config_file=config_file, lazy=False)
+
         self._data = self._model.dataset
         self._day = 0
         self._grid = {
