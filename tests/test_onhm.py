@@ -1,6 +1,7 @@
 import pytest
 
 from gridmet_bmi import Gridmet
+from datetime import datetime, timedelta
 
 
 @pytest.mark.parametrize("var", ("tmax",
@@ -18,8 +19,9 @@ def test_end_date_start_date():
 
 
 def test_end_date_in_the_future():
+    future = datetime.now() + timedelta(10)
     with pytest.raises(ValueError):
-        Gridmet(start_date="2019-03-14", end_date="2019-03-14", lazy=True)
+        Gridmet(start_date="2019-03-14", end_date=future.strftime("%Y-%m-%d"), lazy=True)
 
 
 def test_bad_date_format():
@@ -45,7 +47,7 @@ def test_lazy_load(tmpdir):
     with tmpdir.as_cwd():
         gridmet = Gridmet(start_date="2019-03-14", end_date="2019-03-14", lazy=True, cache_dir=".")
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 0
-        gridmet.daily_minimum_temperature
+        gridmet.tmax
         assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 1
 
 
