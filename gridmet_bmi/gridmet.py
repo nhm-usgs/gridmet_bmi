@@ -22,7 +22,7 @@ class Gridmet:
         "precipitation_amount": "thredds/ncss/agg_met_pr_1979_CurrentYear_CONUS.nc",
     }
 
-    def __init__(self, start_date='2019-03-14', end_date='2019-03-14',
+    def __init__(self, start_date='2019-03-15', end_date='2019-03-21',
                  hru_id=None, return_map=None, wght_file=None, config_file=None,
                  lazy=True, cache_dir=None):
         self._wghts = None
@@ -34,6 +34,7 @@ class Gridmet:
         self._wght_file = wght_file
 
         # cache_dir = None
+        print(yaml.dump(config_file))
         if config_file is not None:
             with open(config_file, 'r') as fp:
                 parameters = yaml.safe_load(fp)

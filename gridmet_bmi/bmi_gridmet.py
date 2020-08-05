@@ -35,6 +35,7 @@ class BmiGridmet(Bmi):
         printing reports.
         """
         self._day = 0
+        self._model.clear_cache()
 
     def get_component_name(self) -> str:
         """Name of the component.
@@ -240,7 +241,8 @@ class BmiGridmet(Bmi):
         ndarray of int
             The input numpy array that holds the grid's shape.
         """
-        shape[:] = self._grid[grid].shape
+        test = numpy.asarray(self._grid[grid].shape, dtype=numpy.int)
+        shape = test
         return shape
 
     def get_grid_size(self, grid: int) -> int:
@@ -453,7 +455,11 @@ class BmiGridmet(Bmi):
         ndarray
             The same numpy array that was passed as an input buffer.
         """
-        dest[:] = self._data[name][self._day].reshape(-1)
+        # tmp = self._data[name].values
+        # size = numpy.shape(tmp)
+        # max = numpy.nanmax(tmp[int(self._day),:,:])
+        # min = numpy.nanmin(tmp[int(self._day),:,:])
+        dest[:] = self._data[name].values[int(self._day),:,:].reshape(-1)
 
     def get_value_at_indices(
             self, name: str, dest: numpy.ndarray, inds: numpy.ndarray
@@ -474,7 +480,7 @@ class BmiGridmet(Bmi):
         array_like
             Value of the model variable at the given location.
         """
-        dest[:] = self._data[name][self._day].reshape(-1)[inds]
+        dest[:] = self._data[name][self._day].values.reshape(-1)[inds]
 
     def get_value_ptr(self, name: str) -> numpy.ndarray:
         """Get a reference to values of the given variable.
