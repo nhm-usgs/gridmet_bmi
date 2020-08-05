@@ -459,7 +459,7 @@ class BmiGridmet(Bmi):
         # size = numpy.shape(tmp)
         # max = numpy.nanmax(tmp[int(self._day),:,:])
         # min = numpy.nanmin(tmp[int(self._day),:,:])
-        dest[:] = self._data[name].values[int(self._day),:,:].reshape(-1)
+        dest[:] = self._data[name].values[int(self._day), :, :].reshape(-1)
 
     def get_value_at_indices(
             self, name: str, dest: numpy.ndarray, inds: numpy.ndarray
