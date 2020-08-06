@@ -224,7 +224,10 @@ class BmiGridmet(Bmi):
         int
             Rank of the grid.
         """
-        return 2
+        if grid == 0:
+            return 2
+        else:
+            raise KeyError("No grid matching identifier")
 
     def get_grid_shape(self, grid: int, shape: numpy.ndarray) -> numpy.ndarray:
         """Get dimensions of the computational grid.
