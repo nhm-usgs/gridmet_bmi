@@ -56,6 +56,7 @@ def test_grid_var_rank_fail():
     with pytest.raises(KeyError):
         model.get_grid_rank(invalid_grid_id)
 
+
 def test_grid_var_size():
     model = BmiGridmet()
     model.initialize()
@@ -67,6 +68,7 @@ def test_grid_var_size_fail():
     model.initialize()
     with pytest.raises(KeyError):
         model.get_grid_size(invalid_grid_id)
+
 
 def test_grid_var_shape():
     model = BmiGridmet()

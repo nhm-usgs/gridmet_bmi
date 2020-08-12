@@ -504,7 +504,7 @@ class BmiGridmet(Bmi):
         array_like
             A reference to a model variable.
         """
-        #return self._data[name].values[int(self._day), :, :].reshape(-1)
+        # return self._data[name].values[int(self._day), :, :].reshape(-1)
 
         raise NotImplementedError("get_value_ptr")
 
@@ -572,7 +572,7 @@ class BmiGridmet(Bmi):
 
         .. _ugrid conventions: http://ugrid-conventions.github.io/ugrid-conventions
         """
-        raise NotImplementedError("get_var_location")
+        return "node"
 
     def get_var_nbytes(self, name: str) -> int:
         """Get size, in bytes, of the given variable.

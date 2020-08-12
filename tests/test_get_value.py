@@ -3,6 +3,7 @@ import numpy as np
 
 from gridmet_bmi import BmiGridmet
 
+
 def test_get_initial_value():
     model = BmiGridmet()
     model.initialize()
@@ -30,6 +31,7 @@ def test_get_value_copy():
 
     assert z0 is not z1
     npt.assert_array_almost_equal(z0, z1)
+
 
 def test_value_size():
     model = BmiGridmet()
