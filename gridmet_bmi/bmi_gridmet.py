@@ -462,7 +462,8 @@ class BmiGridmet(Bmi):
         # size = numpy.shape(tmp)
         # max = numpy.nanmax(tmp[int(self._day),:,:])
         # min = numpy.nanmin(tmp[int(self._day),:,:])
-        dest[:] = self._data[name].values[int(self._day), :, :].reshape(-1)
+        dest[:] = self._data[name].values[int(self._day), :, :].reshape(-1).copy()
+        return dest
 
     def get_value_at_indices(
             self, name: str, dest: numpy.ndarray, inds: numpy.ndarray
@@ -483,7 +484,8 @@ class BmiGridmet(Bmi):
         array_like
             Value of the model variable at the given location.
         """
-        dest[:] = self._data[name][self._day].values.reshape(-1)[inds]
+        # dest[:] = self._data[name][self._day].values.reshape(-1)[inds]
+        raise NotImplementedError("get_value_at_indices")
 
     def get_value_ptr(self, name: str) -> numpy.ndarray:
         """Get a reference to values of the given variable.
@@ -502,7 +504,9 @@ class BmiGridmet(Bmi):
         array_like
             A reference to a model variable.
         """
-        return self._data[name][self._day].values
+        #return self._data[name].values[int(self._day), :, :].reshape(-1)
+
+        raise NotImplementedError("get_value_ptr")
 
     def get_var_grid(self, name: str) -> int:
         """Get grid identifier for the given variable.
