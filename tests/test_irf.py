@@ -52,10 +52,7 @@ def test_initialize_from_file():
     import datetime
 
     yamldict = {"_start_date": datetime.date(year=2020, month=1, day=1),
-                "_end_date": datetime.date(year=2020, month=1, day=7),
-                "_return_map": False,
-                "_hru_id": None,
-                "_wght_file": None}
+                "_end_date": datetime.date(year=2020, month=1, day=7)}
     with tempfile.NamedTemporaryFile("w", delete=False) as fp:
         fp.write((yaml.dump(yamldict, sort_keys=False)))
         name = fp.name

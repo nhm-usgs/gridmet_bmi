@@ -1,7 +1,6 @@
 import datetime
 
 import click
-import numpy as np
 import sys
 
 from gridmet_bmi import __version__
@@ -49,32 +48,8 @@ def validate_date(date_string):
     help='End date',
     show_default='yesterday',
 )
-@click.option(
-    "--hrumap",
-    is_flag=True,
-    help='map gridmet to HRUs'
-)
-@click.option(
-    '--hru_ids',
-    default=np.empty(shape=(1), dtype=int),
-    help='HRU ids as 1-d numpy array of int',
-)
-@click.option(
-    '--wght_file',
-    type=click.Path(exists=True),
-    metavar='path_to_file.csv',
-    help='weights file',
-)
-@click.option(
-    '--config_file',
-    type=click.Path(exists=True),
-    metavar='path_to_file.yaml',
-    help='config file'
-)
-# def touch(whgt_file):
-#     click.echo(click.format_filename(whgt_file))
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
-def main(quiet, verbose, config_file, start, end, var, hrumap, hru_ids, wght_file):
+def main(quiet, verbose, config_file, start, end, var):
     print('test')
     # fetcher = Gridmet(start, end_date=end, hrumap=hrumap, hru_id=hru_ids, wght_file=wght_file)
     fetcher = Gridmet(config_file=config_file)

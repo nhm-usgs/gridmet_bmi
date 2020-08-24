@@ -22,9 +22,9 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="Fetch data from the operational National Hydrologic Model",
-    author="Eric Hutton",
-    author_email="huttone@colorado.edu",
-    url="http://csdms.colorado.edu",
+    author="Richard McDonald and Eric Hutton",
+    author_email="rmcd@usgs.gov",
+    url="http://usgs.gov",
     packages=find_packages(exclude=("tests*",)),
     install_requires=[
         "bmipy",

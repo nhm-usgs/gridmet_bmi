@@ -39,10 +39,10 @@ def test_cache_dir(tmpdir, cache_dir):
         assert list(gridmet.cache_dir.glob("*.nc")) == []
 
 
-def test_cached_data(tmpdir, shared_datadir):
+def test_cached_data(tmpdir):
     with tmpdir.as_cwd():
-        Gridmet(start_date="2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=shared_datadir)
-        assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 0
+        Gridmet(start_date="2010-05-22", end_date="2010-05-22", lazy=False, cache_dir=tmpdir)
+        assert len(tmpdir.listdir(fil=lambda f: f.ext == ".nc")) == 3
 
 
 def test_lazy_load(tmpdir):
