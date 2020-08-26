@@ -209,7 +209,8 @@ class BmiGridmet(Bmi):
             The input numpy array that holds the coordinates of the grid's
             lower-left corner.
         """
-        return self._grid[grid].yx_of_lower_left
+        origin[:] = self._grid[grid].yx_of_lower_left
+        return origin
 
     def get_grid_rank(self, grid: int) -> int:
         """Get number of dimensions of the computational grid.
@@ -278,7 +279,8 @@ class BmiGridmet(Bmi):
         ndarray of float
             The input numpy array that holds the grid's spacing.
         """
-        return self._grid[grid].yx_spacing
+        spacing[:] = self._grid[grid].yx_spacing
+        return spacing
 
     def get_grid_type(self, grid: int) -> str:
         """Get the grid type as a string.
@@ -462,7 +464,8 @@ class BmiGridmet(Bmi):
         # size = numpy.shape(tmp)
         # max = numpy.nanmax(tmp[int(self._day),:,:])
         # min = numpy.nanmin(tmp[int(self._day),:,:])
-        dest[:] = self._data[name].values[int(self._day), :, :].reshape(-1).copy()
+        # to make consistent with BMI origin lower left, Gridmet origin is upper left
+        dest[:] = numpy.flipud(self._data[name].values[int(self._day), :, :]).reshape(-1).copy()
         return dest
 
     def get_value_at_indices(
@@ -670,7 +673,7 @@ class BmiGridmet(Bmi):
                 ),
                 yx_of_lower_left=(
                     float(self._data.attrs["geospatial_lat_min"]),
-                    float(self._data.attrs["geospatial_lat_max"]),
+                    float(self._data.attrs["geospatial_lon_min"]),
                 ),
             )
         }

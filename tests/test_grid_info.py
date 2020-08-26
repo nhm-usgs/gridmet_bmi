@@ -89,7 +89,7 @@ def test_grid_var_shape_fail():
 def test_grid_var_spacing():
     model = BmiGridmet()
     model.initialize()
-    shape = np.empty(2, dtype=np.int)
+    shape = np.empty(2, dtype=np.float)
     tmp2 = np.array([.041667, .041667])
     npt.assert_almost_equal(model.get_grid_spacing(grid_id, shape), tmp2, decimal=4)
 
@@ -97,8 +97,8 @@ def test_grid_var_spacing():
 def test_grid_var_origin():
     model = BmiGridmet()
     model.initialize()
-    shape = np.empty(2, dtype=np.int)
-    tmp2 = np.array([25.066667, 49.4])
+    shape = np.empty(2, dtype=np.float)
+    tmp2 = np.array([25.066667, -124.77])
     npt.assert_almost_equal(model.get_grid_origin(grid_id, shape), tmp2, decimal=2)
 
 
