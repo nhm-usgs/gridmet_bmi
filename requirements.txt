@@ -1,4 +1,8 @@
 numpy
+bmipy
+click
+netcdf4
+pyyaml
 requests
 xarray
 pandas
