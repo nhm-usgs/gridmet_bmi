@@ -37,7 +37,7 @@ before_install:
   - export PATH="$CONDA_PREFIX/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda create -n test_env python=$CONDA_ENV
+  - conda create -n test_env python=$CONDA_ENV --file=requirements.txt -c conda-forge
   - source activate test_env
   - conda info -a && conda list
 install:
