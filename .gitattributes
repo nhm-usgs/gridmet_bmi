@@ -1,2 +1,1 @@
 onhm/_version.py export-subst
-notebooks/GIS/*.shp filter=lfs diff=lfs merge=lfs -text
