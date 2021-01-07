@@ -679,7 +679,7 @@ class BmiGridmet(Bmi):
 
         self._var = {}
         for name in self._output_var_names:
-            array = self._data[name].values
+            array = self._data.isel(day=self._day)[name].values
             self._var[name] = BmiVar(
                 dtype=str(array.dtype),
                 itemsize=array.itemsize,
