@@ -245,8 +245,7 @@ class BmiGridmet(Bmi):
         ndarray of int
             The input numpy array that holds the grid's shape.
         """
-        test = numpy.asarray(self._grid[grid].shape, dtype=numpy.int)
-        shape = test
+        shape[:] = self._grid[grid].shape
         return shape
 
     def get_grid_size(self, grid: int) -> int:
