@@ -262,7 +262,7 @@ class BmiGridmet(Bmi):
         int
             Size of the grid.
         """
-        return numpy.prod(self._grid[grid].shape)
+        return int(numpy.prod(self._grid[grid].shape))
 
     def get_grid_spacing(self, grid: int, spacing: numpy.ndarray) -> numpy.ndarray:
         """Get distance between nodes of the computational grid.
