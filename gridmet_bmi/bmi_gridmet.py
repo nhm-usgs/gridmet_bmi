@@ -439,7 +439,7 @@ class BmiGridmet(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        return f'days since {self._model.start_date}'
+        return "day"
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
