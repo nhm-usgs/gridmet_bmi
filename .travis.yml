@@ -1,11 +1,11 @@
 language: generic
 os:
-
   - linux
   - osx
 env:
   matrix:
-    - TRAVIS_PYTHON_VERSION="3.7"
+    - CONDA_ENV="3.8"
+    - CONDA_ENV="3.9"
   global:
     - CONDA_PREFIX=$HOME/conda
     - MINICONDA_URL_BASE="https://repo.anaconda.com/miniconda/Miniconda3-latest"
