@@ -1,9 +1,8 @@
+import numpy as np
+import numpy.testing as npt
 import pytest
 
 from gridmet_bmi import BmiGridmet
-
-import numpy as np
-import numpy.testing as npt
 
 grid_id = 0
 invalid_grid_id = 12345
@@ -17,7 +16,11 @@ def test_grid_var_names():
     assert names == ("")
 
     names = model.get_output_var_names()
-    assert names == ('daily_maximum_temperature', 'daily_minimum_temperature', 'precipitation_amount')
+    assert names == (
+        "daily_maximum_temperature",
+        "daily_minimum_temperature",
+        "precipitation_amount",
+    )
 
 
 def test_grid_var_item_count():
@@ -90,7 +93,7 @@ def test_grid_var_spacing():
     model = BmiGridmet()
     model.initialize()
     shape = np.empty(2, dtype=np.float)
-    tmp2 = np.array([.041667, .041667])
+    tmp2 = np.array([0.041667, 0.041667])
     npt.assert_almost_equal(model.get_grid_spacing(grid_id, shape), tmp2, decimal=4)
 
 

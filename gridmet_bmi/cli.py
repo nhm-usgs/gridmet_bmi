@@ -1,7 +1,7 @@
 import datetime
+import sys
 
 import click
-import sys
 
 from gridmet_bmi import __version__
 from gridmet_bmi.gridmet import Gridmet
@@ -23,34 +23,34 @@ def validate_date(date_string):
 @click.command()
 @click.version_option(version=__version__)
 @click.option(
-    '-q',
-    '--quiet',
+    "-q",
+    "--quiet",
     is_flag=True,
     help=(
-        'Don\'t emit non-error messages to stderr. Errors are still emitted, '
-        'silence those with 2>/dev/null.'
+        "Don't emit non-error messages to stderr. Errors are still emitted, "
+        "silence those with 2>/dev/null."
     ),
 )
 @click.option(
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    '--start',
-    metavar='YYYY-MM-DD',
+    "--start",
+    metavar="YYYY-MM-DD",
     default=yesterday,
-    help='Start date',
-    show_default='yesterday',
+    help="Start date",
+    show_default="yesterday",
 )
 @click.option(
-    '--end',
-    metavar='YYYY-MM-DD',
+    "--end",
+    metavar="YYYY-MM-DD",
     default=yesterday,
-    help='End date',
-    show_default='yesterday',
+    help="End date",
+    show_default="yesterday",
 )
 @click.argument("var", type=click.Choice(["tmin", "tmax", "precip"]))
 def main(quiet, verbose, config_file, start, end, var):
-    print('test')
+    print("test")
     # fetcher = Gridmet(start, end_date=end, hrumap=hrumap, hru_id=hru_ids, wght_file=wght_file)
     fetcher = Gridmet(config_file=config_file)
     print(getattr(fetcher, var))

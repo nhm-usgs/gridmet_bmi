@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Basic Model Interface (BMI) for the Diffusion model."""
-import numpy
+from collections import namedtuple
 from typing import Tuple
 
+import numpy
 from bmipy import Bmi
+
 from .gridmet import Gridmet
-from collections import namedtuple
 
 BmiVar = namedtuple(
     "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]

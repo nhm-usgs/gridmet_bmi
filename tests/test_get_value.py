@@ -1,5 +1,5 @@
-import numpy.testing as npt
 import numpy as np
+import numpy.testing as npt
 
 from gridmet_bmi import BmiGridmet
 
@@ -8,7 +8,7 @@ def test_get_initial_value():
     model = BmiGridmet()
     model.initialize()
 
-    grid_id = model.get_var_grid('daily_maximum_temperature')
+    grid_id = model.get_var_grid("daily_maximum_temperature")
     size = model.get_grid_size(grid_id)
     vals1 = np.empty(size)
     z0 = model.get_value("daily_maximum_temperature", vals1)
@@ -22,7 +22,7 @@ def test_get_initial_value():
 def test_get_value_copy():
     model = BmiGridmet()
     model.initialize()
-    grid_id = model.get_var_grid('daily_maximum_temperature')
+    grid_id = model.get_var_grid("daily_maximum_temperature")
     size = model.get_grid_size(grid_id)
     vals1 = np.empty(size)
     vals2 = np.empty(size)
@@ -36,11 +36,12 @@ def test_get_value_copy():
 def test_value_size():
     model = BmiGridmet()
     model.initialize()
-    grid_id = model.get_var_grid('daily_maximum_temperature')
+    grid_id = model.get_var_grid("daily_maximum_temperature")
     size = model.get_grid_size(grid_id)
     vals1 = np.empty(size)
     z = model.get_value("daily_maximum_temperature", vals1)
     assert model.get_grid_size(0) == z.size
+
 
 # def test_get_value_pointer():
 #     model = BmiGridmet()
@@ -60,4 +61,4 @@ def test_value_size():
 #         model.update()
 #     z2 = model.get_value_ptr("daily_maximum_temperature")
 #     npt.assert_array_equal(z0, z2, verbose=True)
-    # assert z0 is model.get_value_ptr("daily_maximum_temperature")
+# assert z0 is model.get_value_ptr("daily_maximum_temperature")
