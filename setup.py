@@ -29,12 +29,10 @@ setup(
     install_requires=[
         "bmipy",
         "click",
-        "netcdf4",
         "numpy",
         "pyyaml",
         "requests",
-        "xarray",
-        "pandas"
+        "xarray"
     ],
     entry_points={"console_scripts": ["gridmet_bmi=gridmet_bmi.cli:main"]},
 )
