@@ -7,6 +7,7 @@ dependencies:
   - numpy
   - pyyaml
   - requests
+  - netcdf4
   - xarray
   - pandas
   - matplotlib

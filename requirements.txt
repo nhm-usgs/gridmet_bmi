@@ -1,5 +1,6 @@
 numpy
 requests
+netcdf4
 xarray
 pandas
 bmipy
