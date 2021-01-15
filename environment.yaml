@@ -9,3 +9,4 @@ dependencies:
   - requests
   - xarray
   - pandas
+  - matplotlib
