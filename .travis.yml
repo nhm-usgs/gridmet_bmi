@@ -1,11 +1,11 @@
 language: generic
 os:
-
   - linux
   - osx
 env:
   matrix:
-    - TRAVIS_PYTHON_VERSION="3.7"
+    - CONDA_ENV="3.8"
+    - CONDA_ENV="3.9"
   global:
     - CONDA_PREFIX=$HOME/conda
     - MINICONDA_URL_BASE="https://repo.anaconda.com/miniconda/Miniconda3-latest"
@@ -37,12 +37,14 @@ before_install:
   - export PATH="$CONDA_PREFIX/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda create -n test_env python=$CONDA_ENV
+  - conda create -n test_env python=$CONDA_ENV --file=requirements.txt -c conda-forge
   - source activate test_env
   - conda info -a && conda list
 install:
   - pip install -e .
+before_script:
+- conda install --file=requirements-testing.txt -c conda-forge
 script:
-  - pip install pytest pytest-cov pytest-datadir coveralls
   - pytest --cov=gridmet_bmi --cov-report=xml:$(pwd)/coverage.xml -vvv
+  - bmi-test gridmet_bmi:BmiGridmet --config-file=./examples/gridmet_bmi.yaml --root-dir=./examples -vvv
 after_success: coveralls

@@ -245,8 +245,7 @@ class BmiGridmet(Bmi):
         ndarray of int
             The input numpy array that holds the grid's shape.
         """
-        test = numpy.asarray(self._grid[grid].shape, dtype=numpy.int)
-        shape = test
+        shape[:] = self._grid[grid].shape
         return shape
 
     def get_grid_size(self, grid: int) -> int:
@@ -262,7 +261,7 @@ class BmiGridmet(Bmi):
         int
             Size of the grid.
         """
-        return numpy.prod(self._grid[grid].shape)
+        return int(numpy.prod(self._grid[grid].shape))
 
     def get_grid_spacing(self, grid: int, spacing: numpy.ndarray) -> numpy.ndarray:
         """Get distance between nodes of the computational grid.
@@ -439,7 +438,7 @@ class BmiGridmet(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        return f'days since {self._model.start_date}'
+        return "day"
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
@@ -680,7 +679,7 @@ class BmiGridmet(Bmi):
 
         self._var = {}
         for name in self._output_var_names:
-            array = self._data[name].values
+            array = self._data.isel(day=self._day)[name].values
             self._var[name] = BmiVar(
                 dtype=str(array.dtype),
                 itemsize=array.itemsize,

@@ -2,4 +2,4 @@ numpy
 requests
 xarray
 pandas
-
+bmipy
