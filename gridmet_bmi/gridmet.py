@@ -3,6 +3,7 @@ import datetime
 import re
 import urllib
 from pathlib import Path
+
 import requests
 import xarray as xr
 import yaml
@@ -17,9 +18,14 @@ class Gridmet:
         "precipitation_amount": "thredds/ncss/agg_met_pr_1979_CurrentYear_CONUS.nc",
     }
 
-    def __init__(self, start_date='2019-03-15', end_date='2019-03-21',
-                 config_file=None,
-                 lazy=True, cache_dir=None):
+    def __init__(
+        self,
+        start_date="2019-03-15",
+        end_date="2019-03-21",
+        config_file=None,
+        lazy=True,
+        cache_dir=None,
+    ):
         self._wghts = None
         self._wghts_id = None
         self._start_date = start_date
@@ -27,7 +33,7 @@ class Gridmet:
 
         print(yaml.dump(config_file))
         if config_file is not None:
-            with open(config_file, 'r') as fp:
+            with open(config_file, "r") as fp:
                 parameters = yaml.safe_load(fp)
             for key, value in parameters.items():
                 setattr(self, key, value)
@@ -47,7 +53,7 @@ class Gridmet:
                     self._end_date, datetime.date.today()
                 )
             )
-        self._delta = (self._end_date - self._start_date)
+        self._delta = self._end_date - self._start_date
         self._m_tmin_data = None
         self._m_tmax_data = None
         self._m_prcp_data = None

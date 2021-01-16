@@ -1,13 +1,13 @@
-
 name: gridmet_bmi
 channels:
   - conda-forge
 dependencies:
   - bmipy
   - click
-  - netcdf4
   - numpy
   - pyyaml
   - requests
+  - netcdf4
   - xarray
   - pandas
+  - matplotlib
